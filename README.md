@@ -168,7 +168,9 @@ One free [Render](https://render.com) web service from the `Dockerfile` (see [`r
 - **Demo data:** free Render services have no Shell, so run `npm run seed:demo` once from your own machine (in `backend/`), with `ENV_FILE` pointing at an env file whose `MONGODB_URI` ends in `/weatherping_demo`.
 - **Alerts on a free plan:** a sleeping service runs no jobs, so point an external cron (for example cron-job.org, every 30 minutes) at `POST /api/internal/jobs/evaluate` with the `X-Job-Secret` header.
 
-Free services sleep after 15 minutes without traffic, so the first visit after that takes about a minute. Free Render also blocks outbound SMTP (ports 25, 465 and 587), so the live demo sends no alert email; places, rules and the alert list work, and emails are sent when you run WeatherPing locally or on a paid instance. The forecast calls Open-Meteo's free API, which rate-limits shared hosting addresses, so on the live demo the forecast can answer "weather service unavailable" (the page shows a clear message with Try again); everything else works.
+Free services sleep after 15 minutes without traffic, so the first visit after that takes about a minute. Free Render also blocks outbound SMTP (ports 25, 465 and 587), so the live demo sends no alert email; places, rules and the alert list work, and emails are sent when you run WeatherPing locally or on a paid instance.
+
+**Forecast on free hosting:** Open-Meteo's free API answers the shared address that free Render uses with HTTP 429, so the live demo reaches it through a small free Cloudflare Worker, [`docs/cloudflare-relay.js`](docs/cloudflare-relay.js). Set `OPEN_METEO_FORECAST_URL` and `OPEN_METEO_AIR_QUALITY_URL` to `https://<your-worker>.workers.dev/<secret>/forecast` and `.../<secret>/air-quality`; the Worker forwards only those two paths, only for GET and only when the secret matches, and caches each answer for 10 minutes. On a host that Open-Meteo accepts (your own machine, a paid instance), the default Open-Meteo addresses work as they are. Without either, the page shows a clear "weather service unavailable" message with Try again, and everything else still works.
 
 ## Demo videos
 
