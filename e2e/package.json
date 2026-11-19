@@ -1,0 +1,18 @@
+{
+  "name": "weatherping-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright API and browser tests for WeatherPing",
+  "type": "commonjs",
+  "scripts": {
+    "prepare-run": "node prepare.js",
+    "test": "node prepare.js && playwright test",
+    "test:only": "playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "imapflow": "2.10.2",
+    "mailparser": "3.14.2"
+  }
+}

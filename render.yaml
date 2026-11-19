@@ -1,0 +1,63 @@
+# Render Blueprint: one free web service from the Dockerfile (API + built frontend on one origin).
+# The database is MongoDB Atlas (free M0) with the database weatherping_demo. Set the secrets below in
+# the Render dashboard, then run once from the service's Shell:
+#   npm run seed:demo
+# Atlas: allow Render's outbound IPs (or 0.0.0.0/0) under Network Access.
+# Free services sleep after 15 minutes without traffic; the first visit then takes about a minute, and the
+# in-process evaluator (every 30 minutes) only runs while the service is awake, so point an external cron
+# (e.g. cron-job.org, every 30 minutes) at POST /api/internal/jobs/evaluate with the X-Job-Secret header.
+services:
+  - type: web
+    name: weatherping
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: '1' # trust Render's proxy, so rate limits see the visitor's IP
+      - key: LOG_LEVEL
+        value: info
+      - key: DEMO_MODE
+        value: 'true'
+      - key: RATE_LIMITS_ENABLED
+        value: 'true'
+      - key: OPEN_METEO_FORECAST_URL
+        value: https://api.open-meteo.com/v1/forecast
+      - key: OPEN_METEO_AIR_QUALITY_URL
+        value: https://air-quality-api.open-meteo.com/v1/air-quality
+      - key: OPEN_METEO_GEOCODING_URL
+        value: https://geocoding-api.open-meteo.com/v1/search
+      - key: JWT_SECRET
+        generateValue: true
+      - key: UNSUBSCRIBE_SECRET
+        generateValue: true
+      - key: JOB_TRIGGER_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false # mongodb+srv://…/weatherping_demo
+      - key: FRONTEND_URL
+        sync: false # https://<service>.onrender.com
+      - key: DEMO_PASSWORD
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: DEMO_SMTP_HOST
+        sync: false
+      - key: DEMO_SMTP_PORT
+        sync: false
+      - key: DEMO_SMTP_USER
+        sync: false
+      - key: DEMO_SMTP_PASS
+        sync: false
+      - key: DEMO_SMTP_FROM
+        sync: false

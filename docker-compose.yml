@@ -1,0 +1,42 @@
+# WeatherPing on your machine in one command:
+#
+#   docker compose up --build
+#   docker compose exec app npm run seed:demo   # Priya's places, rules and past alerts
+#
+# then open http://localhost:4000 and use "Log in as User" (password DEMO_PASSWORD below).
+# Weather comes from the real, free Open-Meteo APIs (no key). Set SMTP_* (e.g. a free Ethereal inbox) to see
+# the alert emails. The evaluator runs every 30 minutes; run it now with:
+#   docker compose exec app npm run job:evaluate
+
+services:
+  db:
+    image: mongo:8
+    volumes:
+      - weatherping-mongo:/data/db
+
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb://db:27017/weatherping_demo
+      JWT_SECRET: local-only-secret-change-me-0123456789abcdef
+      UNSUBSCRIBE_SECRET: local-only-unsubscribe-secret-0123456789ab
+      JOB_TRIGGER_SECRET: local-only-job-secret-change-me-0123456789
+      FRONTEND_URL: http://localhost:4000
+      OPEN_METEO_FORECAST_URL: https://api.open-meteo.com/v1/forecast
+      OPEN_METEO_AIR_QUALITY_URL: https://air-quality-api.open-meteo.com/v1/air-quality
+      OPEN_METEO_GEOCODING_URL: https://geocoding-api.open-meteo.com/v1/search
+      DEMO_MODE: 'true'
+      DEMO_PASSWORD: weatherping-demo-1
+      SMTP_HOST: ${SMTP_HOST:-smtp.ethereal.email}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-set-me}
+      SMTP_PASS: ${SMTP_PASS:-set-me}
+      SMTP_FROM: ${SMTP_FROM:-WeatherPing <alerts@weatherping.test>}
+
+volumes:
+  weatherping-mongo:

@@ -1,0 +1,27 @@
+# Secrets (real values live only here, never committed)
+.env
+.env.test
+.env.demo
+**/.env
+.env*
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Local run state and logs
+.run/
+*.log
+
+# Test and demo evidence (kept locally, never committed)
+e2e-results/
+videos/
+playwright-report/
+test-results/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
