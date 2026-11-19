@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/Pavithiran21/WeatherPing/actions/workflows/ci.yml/badge.svg)](https://github.com/Pavithiran21/WeatherPing/actions/workflows/ci.yml)
 
+**Live demo: [weatherping-pavithiran.onrender.com](https://weatherping-pavithiran.onrender.com)** (the Log in page has a one-click demo account). It runs on free hosting, so the first load after a quiet spell can take about a minute, and the forecast and alert emails have limits there (see [Deploy](#deploy)).
+
 Hyperlocal weather alerts by email. You save the places you care about, describe the weather that matters to you ("rain over 60 % between 7 and 9 am at home"), and WeatherPing emails you once when the forecast says it will happen. You don't need to open a weather app every morning.
 
 **Node 26 · Express 5 · MongoDB (Mongoose) · React 19 · TanStack Query · Tailwind CSS 4 · Playwright**
@@ -166,7 +168,7 @@ One free [Render](https://render.com) web service from the `Dockerfile` (see [`r
 - **Demo data:** free Render services have no Shell, so run `npm run seed:demo` once from your own machine (in `backend/`), with `ENV_FILE` pointing at an env file whose `MONGODB_URI` ends in `/weatherping_demo`.
 - **Alerts on a free plan:** a sleeping service runs no jobs, so point an external cron (for example cron-job.org, every 30 minutes) at `POST /api/internal/jobs/evaluate` with the `X-Job-Secret` header.
 
-Free services sleep after 15 minutes without traffic, so the first visit after that takes about a minute. Free Render also blocks outbound SMTP (ports 25, 465 and 587), so the live demo sends no alert email; places, rules and the alert list work, and emails are sent when you run WeatherPing locally or on a paid instance.
+Free services sleep after 15 minutes without traffic, so the first visit after that takes about a minute. Free Render also blocks outbound SMTP (ports 25, 465 and 587), so the live demo sends no alert email; places, rules and the alert list work, and emails are sent when you run WeatherPing locally or on a paid instance. The forecast calls Open-Meteo's free API, which rate-limits shared hosting addresses, so on the live demo the forecast can answer "weather service unavailable" (the page shows a clear message with Try again); everything else works.
 
 ## Demo videos
 
