@@ -163,10 +163,10 @@ One free [Render](https://render.com) web service from the `Dockerfile` (see [`r
 
 - **Database:** MongoDB Atlas free (M0) with a `weatherping_demo` database; allow Render's outbound IPs (or 0.0.0.0/0) under Network Access.
 - **Settings:** `NODE_ENV=production`, `TRUST_PROXY=1`, `DEMO_MODE=true`, `DEMO_PASSWORD`, `FRONTEND_URL` = the service URL, the three `OPEN_METEO_*_URL` values, and SMTP for real mail (Brevo) plus `DEMO_SMTP_*` (Ethereal) for the demo accounts' mail.
-- **Demo data:** run `npm run seed:demo` once from the service's Shell.
+- **Demo data:** free Render services have no Shell, so run `npm run seed:demo` once from your own machine (in `backend/`), with `ENV_FILE` pointing at an env file whose `MONGODB_URI` ends in `/weatherping_demo`.
 - **Alerts on a free plan:** a sleeping service runs no jobs, so point an external cron (for example cron-job.org, every 30 minutes) at `POST /api/internal/jobs/evaluate` with the `X-Job-Secret` header.
 
-Free services sleep after 15 minutes without traffic, so the first visit after that takes about a minute.
+Free services sleep after 15 minutes without traffic, so the first visit after that takes about a minute. Free Render also blocks outbound SMTP (ports 25, 465 and 587), so the live demo sends no alert email; places, rules and the alert list work, and emails are sent when you run WeatherPing locally or on a paid instance.
 
 ## Demo videos
 

@@ -1,14 +1,16 @@
 # Render Blueprint: one free web service from the Dockerfile (API + built frontend on one origin).
 # The database is MongoDB Atlas (free M0) with the database weatherping_demo. Set the secrets below in
-# the Render dashboard, then run once from the service's Shell:
-#   npm run seed:demo
+# the Render dashboard. Free Render services have no Shell, so seed the demo data once from your own
+# machine, with ENV_FILE pointing at an env file whose MONGODB_URI ends in /weatherping_demo:
+#   npm run seed:demo   (from backend/)
 # Atlas: allow Render's outbound IPs (or 0.0.0.0/0) under Network Access.
+# Free Render also blocks outbound SMTP (ports 25, 465, 587), so no alert email is sent from the live demo.
 # Free services sleep after 15 minutes without traffic; the first visit then takes about a minute, and the
 # in-process evaluator (every 30 minutes) only runs while the service is awake, so point an external cron
 # (e.g. cron-job.org, every 30 minutes) at POST /api/internal/jobs/evaluate with the X-Job-Secret header.
 services:
   - type: web
-    name: weatherping
+    name: weatherping-pavithiran
     runtime: docker
     plan: free
     healthCheckPath: /api/health
