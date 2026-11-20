@@ -1,0 +1,15 @@
+# The API only, for Render. The React app is hosted on Vercel, which forwards /api to this service
+# (see frontend/vercel.json), so the browser still sees one origin and the refresh cookie keeps working.
+# The full image (API + built frontend on one origin) is the Dockerfile, used by docker-compose and CI.
+
+FROM node:26-alpine
+ENV NODE_ENV=production \
+    PORT=4000
+WORKDIR /app/backend
+COPY backend/package.json backend/package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+COPY backend/ ./
+USER node
+EXPOSE 4000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s CMD wget -qO- http://127.0.0.1:${PORT}/api/health || exit 1
+CMD ["node", "src/server.js"]

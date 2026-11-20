@@ -161,10 +161,13 @@ npm test        # writes .env.test, resets and seeds weatherping_test, starts th
 
 ## Deploy
 
-One free [Render](https://render.com) web service from the `Dockerfile` (see [`render.yaml`](render.yaml)): the API serves the built frontend, so the app, the API and the refresh cookie share one origin, with no CORS or cross-site cookies.
+The frontend runs on [Vercel](https://vercel.com) and the API on [Render](https://render.com), and the browser still sees one origin: [`frontend/vercel.json`](frontend/vercel.json) forwards `/api/*` to the Render service, so the cookies (SameSite=Strict) work with no CORS or cross-site cookies.
+
+- **Frontend (Vercel):** import the repository, set the Root Directory to `frontend` (framework Vite, build `npm run build`, output `dist`). `vercel.json` also sends every other path to `index.html` for React Router and sets the page's security headers. If the Render service is renamed, change its URL in `vercel.json`.
+- **API (Render):** one free web service from `Dockerfile.api` (see [`render.yaml`](render.yaml)). The full `Dockerfile` (API plus built frontend on one origin) is what `docker-compose.yml` and CI use.
 
 - **Database:** MongoDB Atlas free (M0) with a `weatherping_demo` database; allow Render's outbound IPs (or 0.0.0.0/0) under Network Access.
-- **Settings:** `NODE_ENV=production`, `TRUST_PROXY=1`, `DEMO_MODE=true`, `DEMO_PASSWORD`, `FRONTEND_URL` = the service URL, the three `OPEN_METEO_*_URL` values, and SMTP for real mail (Brevo) plus `DEMO_SMTP_*` (Ethereal) for the demo accounts' mail.
+- **Settings:** `NODE_ENV=production`, `TRUST_PROXY=2` (Vercel, then Render's proxy), `DEMO_MODE=true`, `DEMO_PASSWORD`, `FRONTEND_URL` = the Vercel URL, the three `OPEN_METEO_*_URL` values, and SMTP for real mail (Brevo) plus `DEMO_SMTP_*` (Ethereal) for the demo accounts' mail.
 - **Demo data:** free Render services have no Shell, so run `npm run seed:demo` once from your own machine (in `backend/`), with `ENV_FILE` pointing at an env file whose `MONGODB_URI` ends in `/weatherping_demo`.
 - **Alerts on a free plan:** a sleeping service runs no jobs, so point an external cron (for example cron-job.org, every 30 minutes) at `POST /api/internal/jobs/evaluate` with the `X-Job-Secret` header.
 
