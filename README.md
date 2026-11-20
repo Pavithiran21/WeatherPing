@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Pavithiran21/WeatherPing/actions/workflows/ci.yml/badge.svg)](https://github.com/Pavithiran21/WeatherPing/actions/workflows/ci.yml)
 
-**Live demo: [weatherping-pavithiran.onrender.com](https://weatherping-pavithiran.onrender.com)** (the Log in page has a one-click demo account). It runs on free hosting, so the first load after a quiet spell can take about a minute, and the forecast and alert emails have limits there (see [Deploy](#deploy)).
+**Live demo: [weather-ping.vercel.app](https://weather-ping.vercel.app)** (the Log in page has a one-click demo account). It runs on free hosting, so the first load after a quiet spell can take about a minute, and the forecast and alert emails have limits there (see [Deploy](#deploy)).
 
 Hyperlocal weather alerts by email. You save the places you care about, describe the weather that matters to you ("rain over 60 % between 7 and 9 am at home"), and WeatherPing emails you once when the forecast says it will happen. You don't need to open a weather app every morning.
 
