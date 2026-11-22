@@ -47,12 +47,13 @@ test('create an account in the browser: it starts with "Add your first spot"; lo
   await expect(page).toHaveURL(/\/rules$/);
 });
 
-test('the demo panel shows the account, its password and the demo inbox, and logs in as Priya with one click', async ({ page }) => {
+test('the demo panel shows the account but no password or inbox login, and logs in as Priya with one click', async ({ page }) => {
   await page.goto('/login');
   const demo = page.getByRole('region', { name: /demo/i });
   await expect(demo).toContainText(SEEDED.demo);
-  await expect(demo).toContainText(process.env.DEMO_PASSWORD);
-  await expect(demo).toContainText(process.env.DEMO_SMTP_USER);
+  await expect(demo).not.toContainText(process.env.DEMO_PASSWORD);
+  if (process.env.DEMO_SMTP_USER) await expect(demo).not.toContainText(process.env.DEMO_SMTP_USER);
+  await expect(page.locator('body')).not.toContainText(/ethereal\.email|inbox password/i);
   await demo.getByRole('button', { name: /Log in as User/ }).click();
   await expect(page.getByRole('navigation', { name: 'Main' }).first()).toBeVisible();
   await expect(page.getByText('Chennai').first()).toBeVisible();

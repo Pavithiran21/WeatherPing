@@ -54,8 +54,8 @@ export function DemoLoginCard() {
         <IconPresentation size={16} aria-hidden="true" /> Demo mode
       </span>
       <p className="mt-2.5 mb-3 text-[15px]">
-        Try WeatherPing with a ready-made account: use the button, or type the email and password
-        above.
+        Try WeatherPing with a ready-made account: one click, no password needed. Its emails (weather
+        alerts) go to a test inbox, not to a real mailbox.
       </p>
       {accounts.data.accounts.map((account) => (
         <div key={account.role} className="mb-2 last:mb-0">
@@ -77,26 +77,9 @@ export function DemoLoginCard() {
           </button>
           <dl className="mt-2 rounded-[14px] border-2 border-ink bg-white px-3 py-2 text-sm">
             <CredentialRow label="Email" value={account.email} />
-            <CredentialRow label="Password" value={account.password} />
           </dl>
         </div>
       ))}
-      {accounts.data.inbox && (
-        <div className="mt-3 text-sm">
-          <p className="mb-1">
-            Demo emails (password reset, weather alerts) go to this Ethereal inbox, not to a real
-            mailbox. Log in at{' '}
-            <a href={accounts.data.inbox.url} target="_blank" rel="noreferrer" className="link">
-              ethereal.email
-            </a>{' '}
-            with:
-          </p>
-          <dl className="rounded-[14px] border-2 border-ink bg-white px-3 py-2">
-            <CredentialRow label="Inbox user" value={accounts.data.inbox.user} />
-            <CredentialRow label="Inbox password" value={accounts.data.inbox.password} />
-          </dl>
-        </div>
-      )}
       {failed && (
         <p className="form-error mt-3" role="alert">
           <IconAlertCircle size={20} aria-hidden="true" /> Couldn't start the demo. Try again.

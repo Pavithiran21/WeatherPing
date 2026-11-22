@@ -158,10 +158,12 @@ test.describe('the demo accounts', () => {
     expect((await json(await locked.get('/me'), 200)).isDemo).toBe(true);
   });
 
-  test('with DEMO_MODE on, /api/demo lists the account, its password and the demo inbox, and "Log in as User" starts a session', async ({ request }) => {
+  test('with DEMO_MODE on, /api/demo lists the account but never a password or inbox login, and "Log in as User" starts a session', async ({ request }) => {
     const info = await json(await request.get(apiUrl('/demo')), 200);
-    expect(info.accounts).toEqual([{ role: 'User', email: SEEDED.demo, password: process.env.DEMO_PASSWORD }]);
-    expect(info.inbox).toMatchObject({ url: 'https://ethereal.email/login', user: process.env.DEMO_SMTP_USER });
+    expect(info).toEqual({ accounts: [{ role: 'User', email: SEEDED.demo }] });
+    const raw = JSON.stringify(info);
+    expect(raw).not.toContain(process.env.DEMO_PASSWORD);
+    if (process.env.DEMO_SMTP_PASS) expect(raw).not.toContain(process.env.DEMO_SMTP_PASS);
     const response = await request.post(apiUrl('/demo/login'), { data: { role: 'User' } });
     const session = await json(response, 200);
     expect(session.user).toMatchObject({ email: SEEDED.demo, isDemo: true, name: 'Priya' });
